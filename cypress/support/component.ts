@@ -22,7 +22,7 @@ import "./commands";
 import { mount } from "cypress/react18";
 
 //Ensure global styles are loaded
-import "../../styles/globals.css";
+import "../../src/app/globals.css";
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.

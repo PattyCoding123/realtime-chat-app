@@ -12,10 +12,11 @@ export async function GET(req: NextApiRequest) {
     redirect("/sign-in");
   }
 
-  const userExists = await db.sismember(
+  const userExists = (await fetchRedis(
+    "sismember",
     `user:${userId}`,
-    "incoming_friend_request"
-  );
+    "incoming_friend_requests"
+  )) as 0 | 1;
 
   if (!userExists) {
     // If user does not exist, store user information in Upstash Redis

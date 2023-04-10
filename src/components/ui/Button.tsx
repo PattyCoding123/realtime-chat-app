@@ -1,7 +1,8 @@
-import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 import { ButtonHTMLAttributes, FC } from "react";
+
+import { cn } from "@/lib/utils";
 
 export const ButtonVariants = cva(
   // Define the base styling of reusable button

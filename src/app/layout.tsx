@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs/app-beta";
+import { UserButton, SignedIn } from "@clerk/nextjs/app-beta";
 
 import "./globals.css";
 
@@ -15,13 +16,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <head>
-          <title>Next.js 13 with Clerk</title>
-        </head>
-        <body>{children}</body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <head>
+        <title>Next.js 13 with Clerk</title>
+      </head>
+      <ClerkProvider>
+        <body>
+          <nav>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/sign-in" signInUrl="/sign-in" />
+            </SignedIn>
+          </nav>
+          {children}
+        </body>
+      </ClerkProvider>
+    </html>
   );
 }

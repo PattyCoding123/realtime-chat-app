@@ -11,6 +11,8 @@ const isPublic = (path: string) => {
   );
 };
 
+// Function that provides the page-protection middleware
+// using Clerk. Using this over controlled components.
 export default withClerkMiddleware((request: NextRequest) => {
   if (isPublic(request.nextUrl.pathname)) {
     return NextResponse.next();

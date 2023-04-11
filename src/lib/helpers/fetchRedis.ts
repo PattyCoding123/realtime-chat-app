@@ -3,6 +3,7 @@ const authToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 
 type Command = "zrange" | "sismember" | "get" | "smembers" | "exists";
 
+// Helper for no caching behavior on GET requests.
 export async function fetchRedis(
   command: Command,
   ...args: (string | number)[]

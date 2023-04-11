@@ -17,10 +17,19 @@ export const addFriendValidator = z.object({
 
 // Validator function for checking if userId exists in redis
 export async function userIdExistsValidator(userId: string) {
-  const userExists = (await fetchRedis("sismember", "user", userId)) as 0 | 1;
+  try {
+    const userExists = (await fetchRedis("sismember", "user", userId)) as 0 | 1;
 
-  if (!userExists) {
-    // If user does not exist, store user information in Upstash Redis
-    await db.sadd(`user:${userId}`, "friends", "incoming_friend_requests");
+    if (!userExists) {
+      // If user does not exist, store user information in Upstash Redis
+      const res = await db.sadd(
+        `user:${userId}`,
+        "friends",
+        "incoming_friend_requests"
+      );
+      return res;
+    }
+  } catch (error) {
+    throw new Error(`Error executing Redis command`);
   }
 }

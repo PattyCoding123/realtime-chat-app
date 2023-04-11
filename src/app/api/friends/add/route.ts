@@ -12,9 +12,9 @@ const ACCESS_USER = 0;
 
 export async function POST(req: NextApiRequest) {
   try {
-    const body = req.body as { email: string };
-
-    const { email: emailToAdd } = addFriendValidator.parse(body.email);
+    const { email: emailToAdd } = addFriendValidator.parse({
+      email: req.body.email,
+    });
 
     const userToAdd = await clerkClient.users.getUserList({
       emailAddress: [emailToAdd],

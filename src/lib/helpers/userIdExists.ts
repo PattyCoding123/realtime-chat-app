@@ -2,7 +2,7 @@ import { db } from "../db";
 import { fetchRedis } from "./fetchRedis";
 
 // Validator function for checking if userId exists in redis
-export async function userIdExistsValidator(userId: string) {
+export default async function userIdExists(userId: string) {
   try {
     const userExists = (await fetchRedis("sismember", "user", userId)) as 0 | 1;
 

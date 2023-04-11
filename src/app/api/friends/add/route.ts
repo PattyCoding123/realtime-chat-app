@@ -2,10 +2,11 @@ import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import { db } from "@/lib/db";
 // import { pusherServer } from "@/lib/pusher";
 // import { toPusherKey } from "@/lib/utils";
-import { addFriendValidator, userIdExistsValidator } from "@/lib/utils";
+import { addFriendValidator } from "@/lib/utils";
 import { clerkClient, getAuth } from "@clerk/nextjs/server";
 import { NextApiRequest } from "next";
 import { z } from "zod";
+import userIdExists from "@/lib/helpers/userIdExists";
 
 const ACCESS_USER = 0;
 
@@ -38,10 +39,7 @@ export async function POST(req: NextApiRequest) {
     }
 
     // Check if users exists in redis
-    await Promise.all([
-      userIdExistsValidator(idToAdd),
-      userIdExistsValidator(session.userId),
-    ]);
+    await Promise.all([userIdExists(idToAdd), userIdExists(session.userId)]);
 
     // check if user is already added
     const isAlreadyAdded = (await fetchRedis(

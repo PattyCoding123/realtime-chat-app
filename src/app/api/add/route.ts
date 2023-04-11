@@ -1,4 +1,4 @@
-import { fetchRedis } from "@/lib/helpers/redisFetch";
+import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import { db } from "@/lib/db";
 // import { pusherServer } from "@/lib/pusher";
 // import { toPusherKey } from "@/lib/utils";

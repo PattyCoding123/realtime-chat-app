@@ -35,13 +35,13 @@ const sidebarOptions: SidebarOption[] = [
 const FIRST_EMAIL_INDEX = 0;
 
 const Layout = async ({ children }: LayoutProps) => {
-  const user: User | null = await currentUser();
-  if (!user) notFound();
+  const sessionUser: User | null = await currentUser();
+  if (!sessionUser) notFound();
 
   const unseenRequestCount = (
     (await fetchRedis(
       "smembers",
-      `user:${user.id}:incoming_friend_requests`
+      `user:${sessionUser.id}:incoming_friend_requests`
     )) as Array<unknown>
   ).length;
 
@@ -101,7 +101,7 @@ const Layout = async ({ children }: LayoutProps) => {
 
             <li>
               <FriendRequestSidebarOptions
-                sessionUserId={user.id}
+                sessionUserId={sessionUser.id}
                 initialUnseenRequestCount={unseenRequestCount}
               />
             </li>
@@ -116,9 +116,12 @@ const Layout = async ({ children }: LayoutProps) => {
                 {/* For screen readers, sr */}
                 <span className="sr-only">Your profile</span>
                 <div className="flex flex-col">
-                  <span aria-hidden="true">{`${user?.firstName} ${user?.lastName}`}</span>
+                  <span aria-hidden="true">{`${sessionUser?.firstName} ${sessionUser?.lastName}`}</span>
                   <span className="text-sm text-zinc-400">
-                    {user?.emailAddresses[FIRST_EMAIL_INDEX].emailAddress}
+                    {
+                      sessionUser?.emailAddresses[FIRST_EMAIL_INDEX]
+                        .emailAddress
+                    }
                   </span>
                 </div>
               </div>

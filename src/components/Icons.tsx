@@ -12,4 +12,7 @@ export const Icons = {
   UserPlus,
 };
 
+// Exports Icon as a type of the keys of the Icons object
+// as a union. This allows us to use the Icon type in other
+// components to ensure that we are only using valid icons.
 export type Icon = keyof typeof Icons;

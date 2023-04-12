@@ -41,6 +41,10 @@ export async function POST(req: Request) {
       `user:${idToAdd}:incoming_friend_requests`,
       session.userId
     )) as 0 | 1;
+
+    if (!hasFriendRequest) {
+      return new Response("No friend request", { status: 400 });
+    }
     // check if user is already added
 
     // valid request, send friend request
@@ -54,7 +58,12 @@ export async function POST(req: Request) {
     //   }
     // );
 
-    await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.userId);
+    // Both users add each other to their friends list, and clear up the incoming friend request
+    await Promise.all([
+      db.sadd(`user:${idToAdd}:friends`, session.userId),
+      db.sadd(`user:${session.userId}:friends`, idToAdd),
+      db.srem(`user:${idToAdd}:incoming_friend_requests`, session.userId),
+    ]);
 
     return new Response("OK");
   } catch (error) {

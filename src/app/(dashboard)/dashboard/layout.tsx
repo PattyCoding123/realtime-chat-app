@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import { currentUser } from "@clerk/nextjs/app-beta";
+import type { User } from "@clerk/nextjs/api";
 
 import { Icon, Icons } from "@/components/Icons";
 import { SignedIn, UserButton } from "@clerk/nextjs/app-beta";
@@ -24,7 +26,10 @@ const sidebarOptions: SidebarOption[] = [
   },
 ];
 
-const Layout = ({ children }: LayoutProps) => {
+const FIRST_EMAIL_INDEX = 0;
+
+const Layout = async ({ children }: LayoutProps) => {
+  const user: User | null = await currentUser();
   return (
     <div className="flex h-screen w-full">
       <div
@@ -32,9 +37,6 @@ const Layout = ({ children }: LayoutProps) => {
       border-r border-gray-200 bg-white px-6"
       >
         <div className="flex items-center justify-between">
-          <SignedIn>
-            <UserButton afterSignOutUrl="/sign-in" signInUrl="/sign-in" />
-          </SignedIn>
           <Link href="/dashboard" className="flex h-16 shrink-0 items-center">
             <Icons.Logo className="h-8 w-8" />
           </Link>
@@ -73,6 +75,23 @@ const Layout = ({ children }: LayoutProps) => {
                   );
                 })}
               </ul>
+            </li>
+
+            {/* mt-auto pushes this section to the bottom of sidebar */}
+            <li className="-mx-6 mt-auto flex items-center">
+              <div className="text flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold text-gray-900">
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/sign-in" signInUrl="/sign-in" />
+                </SignedIn>
+                {/* For screen readers, sr */}
+                <span className="sr-only">Your profile</span>
+                <div className="flex flex-col">
+                  <span aria-hidden="true">{`${user?.firstName} ${user?.lastName}`}</span>
+                  <span className="text-sm text-zinc-400">
+                    {user?.emailAddresses[FIRST_EMAIL_INDEX].emailAddress}
+                  </span>
+                </div>
+              </div>
             </li>
           </ul>
         </nav>

@@ -3,18 +3,18 @@ import { db } from "@/lib/db";
 // import { pusherServer } from "@/lib/pusher";
 // import { toPusherKey } from "@/lib/utils";
 import { addFriendValidator } from "@/lib/utils";
-import { clerkClient, getAuth } from "@clerk/nextjs/server";
-import { NextApiRequest } from "next";
+import { clerkClient } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/app-beta";
 import { z } from "zod";
 import userIdExists from "@/lib/helpers/userIdExists";
 
 const ACCESS_USER = 0;
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: Request) {
   try {
-    const { email: emailToAdd } = addFriendValidator.parse({
-      email: req.body.email,
-    });
+
+    const body = await req.json();
+    const { email: emailToAdd } = addFriendValidator.parse(body);
 
     const userToAdd = await clerkClient.users.getUserList({
       emailAddress: [emailToAdd],
@@ -25,10 +25,10 @@ export async function POST(req: NextApiRequest) {
       return new Response("This person does not exist.", { status: 400 });
     }
 
-    const session = getAuth(req);
+    const session = auth();
     const idToAdd = userToAdd[ACCESS_USER].id;
 
-    if (!session || !session.userId) {
+    if (!session.userId) {
       return new Response("Unauthorized", { status: 401 });
     }
 

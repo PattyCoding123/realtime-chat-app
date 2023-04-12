@@ -21,14 +21,7 @@ export default function RootLayout({
         <title>Next.js 13 with Clerk</title>
       </head>
       <ClerkProvider>
-        <body>
-          <nav>
-            <SignedIn>
-              <UserButton afterSignOutUrl="/sign-in" signInUrl="/sign-in" />
-            </SignedIn>
-          </nav>
-          {children}
-        </body>
+        <body>{children}</body>
       </ClerkProvider>
     </html>
   );

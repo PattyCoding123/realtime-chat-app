@@ -1,5 +1,7 @@
 import { LucideProps, UserPlus } from "lucide-react";
 
+// Logo is a custom icon that is not included in Lucide React.
+// Add more Lucide icons here as needed.
 export const Icons = {
   Logo: (props: LucideProps) => (
     <svg {...props} viewBox="0 0 2000 2000">

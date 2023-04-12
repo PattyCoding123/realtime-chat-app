@@ -11,8 +11,6 @@ import { idValidator } from "@/lib/utils";
 
 export async function POST(req: Request) {
   try {
-    const ACCESS_USER = 0;
-
     const body = await req.json();
     const { id: idToAdd } = idValidator.parse(body);
 

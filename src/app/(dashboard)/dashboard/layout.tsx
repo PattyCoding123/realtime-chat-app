@@ -7,6 +7,7 @@ import type { User } from "@clerk/nextjs/api";
 import FriendRequestSidebarOptions from "@/components/FriendRequestsSidebarOptions";
 import { Icon, Icons } from "@/components/Icons";
 import { SignedIn, UserButton } from "@clerk/nextjs/app-beta";
+import { fetchRedis } from "@/lib/helpers/fetchRedis";
 
 interface LayoutProps {
   children: ReactNode;
@@ -36,6 +37,14 @@ const FIRST_EMAIL_INDEX = 0;
 const Layout = async ({ children }: LayoutProps) => {
   const user: User | null = await currentUser();
   if (!user) notFound();
+
+  const unseenRequestCount = (
+    (await fetchRedis(
+      "smembers",
+      `user:${user.id}:incoming_friend_requests`
+    )) as Array<unknown>
+  ).length;
+
   return (
     // Separated into two sections: sidebar and main content
     <div className="flex h-screen w-full">
@@ -93,7 +102,7 @@ const Layout = async ({ children }: LayoutProps) => {
             <li>
               <FriendRequestSidebarOptions
                 sessionUserId={user.id}
-                initialUnseenRequestCount={0}
+                initialUnseenRequestCount={unseenRequestCount}
               />
             </li>
 

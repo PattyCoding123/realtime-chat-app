@@ -16,6 +16,7 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
   const [unseenRequestCount, setUnseenRequestCount] = useState(
     initialUnseenRequestCount
   );
+
   return (
     <Link
       href="/dashboard/requests"
@@ -26,6 +27,11 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
         <User className="h-4 w-4" />
       </div>
       <p className="truncate">Friend Requests</p>
+      {unseenRequestCount > 0 ? (
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">
+          {unseenRequestCount}
+        </div>
+      ) : null}
     </Link>
   );
 };

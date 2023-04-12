@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     const isAlreadyAdded = (await fetchRedis(
       "sismember",
       `user:${session.userId}:friends`,
-      session.userId
+      idToAdd
     )) as 0 | 1;
 
     if (isAlreadyAdded) {
@@ -36,8 +36,8 @@ export async function POST(req: Request) {
 
     const hasFriendRequest = (await fetchRedis(
       "sismember",
-      `user:${idToAdd}:incoming_friend_requests`,
-      session.userId
+      `user:${session.userId}:incoming_friend_requests`,
+      idToAdd
     )) as 0 | 1;
 
     if (!hasFriendRequest) {
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     await Promise.all([
       db.sadd(`user:${idToAdd}:friends`, session.userId),
       db.sadd(`user:${session.userId}:friends`, idToAdd),
-      db.srem(`user:${idToAdd}:incoming_friend_requests`, session.userId),
+      db.srem(`user:${session.userId}:incoming_friend_requests`, idToAdd),
     ]);
 
     return new Response("OK");

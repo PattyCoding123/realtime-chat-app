@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import { currentUser } from "@clerk/nextjs/app-beta";
 import type { User } from "@clerk/nextjs/api";
 
+import FriendRequestSidebarOptions from "@/components/FriendRequestsSidebarOptions";
 import { Icon, Icons } from "@/components/Icons";
 import { SignedIn, UserButton } from "@clerk/nextjs/app-beta";
 
@@ -33,6 +35,7 @@ const FIRST_EMAIL_INDEX = 0;
 
 const Layout = async ({ children }: LayoutProps) => {
   const user: User | null = await currentUser();
+  if (!user) notFound();
   return (
     // Separated into two sections: sidebar and main content
     <div className="flex h-screen w-full">
@@ -85,6 +88,13 @@ const Layout = async ({ children }: LayoutProps) => {
                   );
                 })}
               </ul>
+            </li>
+
+            <li>
+              <FriendRequestSidebarOptions
+                sessionUserId={user.id}
+                initialUnseenRequestCount={0}
+              />
             </li>
 
             {/* mt-auto pushes this section to the bottom of sidebar */}

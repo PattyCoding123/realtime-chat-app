@@ -8,10 +8,10 @@ import { auth } from "@clerk/nextjs/app-beta";
 import { z } from "zod";
 import userIdExists from "@/lib/helpers/userIdExists";
 
-const ACCESS_USER = 0;
 
 export async function POST(req: Request) {
   try {
+    const ACCESS_USER = 0;
 
     const body = await req.json();
     const { email: emailToAdd } = addFriendValidator.parse(body);

@@ -2,8 +2,10 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Check, UserPlus, X } from "lucide-react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
+import { pusherClient } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 interface FriendRequestsProps {
   sessionUserId: string;
   incomingFriendRequests: IncomingFriendRequest[];
@@ -18,6 +20,28 @@ const FriendRequests: FC<FriendRequestsProps> = ({
     incomingFriendRequests
   );
 
+  // Client-side, subscribe to the friend request event which will
+  // allow us to see new incoming friend requests in real time.
+  useEffect(() => {
+    // Begin listening to the friend request event
+    pusherClient.subscribe(
+      toPusherKey(`user:${sessionUserId}:incoming_friend_requests`)
+    );
+
+    const friendRequestsHandler = (data: IncomingFriendRequest) => {};
+
+    // Bind an event handler to the friend request event
+    pusherClient.bind("incoming_friend_requests", friendRequestsHandler);
+
+    // Clean up by unsubscribing and unbinding the event handler
+    return () => {
+      pusherClient.unsubscribe(
+        toPusherKey(`user:${sessionUserId}:incoming_friend_requests`)
+      );
+
+      pusherClient.unbind("incoming_friend_requests", friendRequestsHandler);
+    };
+  }, [sessionUserId]);
   // Callback to call the acceptFriend route handler
   const acceptFriend = async (senderId: string) => {
     await axios.post("/api/friends/accept", { id: senderId });

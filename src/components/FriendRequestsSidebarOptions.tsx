@@ -23,7 +23,7 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
       className="group flex items-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
     >
       {/* group-hover: indicates all items in the group are being hovered. */}
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium text-gray-200 group-hover:border-indigo-600">
+      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium text-gray-400 group-hover:border-indigo-600">
         <User className="h-4 w-4" />
       </div>
       <p className="truncate">Friend Requests</p>

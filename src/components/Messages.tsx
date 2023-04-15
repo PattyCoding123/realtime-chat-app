@@ -1,7 +1,9 @@
 "use client";
 import { FC, useRef, useState } from "react";
-import type { Message } from "@/lib/helpers/validators/messageValidator";
 import { currentUser } from "@clerk/nextjs/app-beta";
+import format from "date-fns/format";
+
+import type { Message } from "@/lib/helpers/validators/messageValidator";
 import { cn } from "@/lib/utils";
 
 interface MessagesProps {
@@ -13,6 +15,10 @@ const Messages: FC<MessagesProps> = ({ initialMessages, sessionUserId }) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
   const scrollDownRef = useRef<HTMLDivElement | null>(null);
+
+  const formatTimestamp = (timestamp: number) => {
+    return format(timestamp, "HH:mm");
+  };
   return (
     <div
       id="messages"
@@ -56,7 +62,7 @@ const Messages: FC<MessagesProps> = ({ initialMessages, sessionUserId }) => {
                 >
                   {message.text}{" "}
                   <span className="ml-2 text-xs text-gray-400">
-                    {message.timestamp}
+                    {formatTimestamp(message.timestamp)}
                   </span>
                 </span>
               </div>

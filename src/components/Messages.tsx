@@ -84,7 +84,9 @@ const Messages: FC<MessagesProps> = ({
                 <Image
                   fill
                   src={isCurrentUser ? sessionImg : receiver.profileImageUrl}
-                  alt="Sender image"
+                  referrerPolicy="no-referrer"
+                  alt="Profile picture"
+                  className="rounded-full"
                 />
               </div>
             </div>

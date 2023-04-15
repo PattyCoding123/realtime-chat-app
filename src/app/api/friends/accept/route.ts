@@ -1,4 +1,4 @@
-import { clerkClient } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/app-beta";
 import { auth } from "@clerk/nextjs/app-beta";
 import { z } from "zod";
 

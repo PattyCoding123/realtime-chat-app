@@ -21,7 +21,7 @@ const getChatMessages = async (chatId: string): Promise<Message[]> => {
     // Fetch messages for this chat room
     const results: string[] = await fetchRedis(
       "zrange",
-      `chat:${chatId}`,
+      `chat:${chatId}:messages`,
       0,
       -1
     );

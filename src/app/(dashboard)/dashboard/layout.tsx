@@ -9,6 +9,7 @@ import { Icon, Icons } from "@/components/Icons";
 import { SignedIn, UserButton } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import { getFriendsByUserId } from "@/lib/helpers/get-friends-by-user-id";
+import SidebarChatList from "@/components/SidebarChatList";
 
 interface LayoutProps {
   children: ReactNode;
@@ -40,8 +41,10 @@ const Layout = async ({ children }: LayoutProps) => {
   const sessionUser: User | null = await currentUser();
   if (!sessionUser) notFound();
 
+  // Get user's friends
   const friends = await getFriendsByUserId(sessionUser.id);
 
+  // Get friend requests
   const unseenRequestCount = (
     (await fetchRedis(
       "smembers",
@@ -64,14 +67,19 @@ const Layout = async ({ children }: LayoutProps) => {
           </Link>
         </div>
 
-        <div className="text-xs font-semibold leading-6 text-gray-400">
-          Your chats
-        </div>
+        {/* Render "Your chats" if user has friends */}
+        {friends.length > 0 ? (
+          <div className="text-xs font-semibold leading-6 text-gray-400">
+            Your chats
+          </div>
+        ) : null}
 
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
             {/* Render all available chats */}
-            <li>Chats that this user has</li>
+            <li>
+              <SidebarChatList friends={friends} />
+            </li>
 
             {/* Render all available options */}
             <li>
@@ -100,14 +108,13 @@ const Layout = async ({ children }: LayoutProps) => {
                     </li>
                   );
                 })}
+                <li>
+                  <FriendRequestSidebarOptions
+                    sessionUserId={sessionUser.id}
+                    initialUnseenRequestCount={unseenRequestCount}
+                  />
+                </li>
               </ul>
-            </li>
-
-            <li>
-              <FriendRequestSidebarOptions
-                sessionUserId={sessionUser.id}
-                initialUnseenRequestCount={unseenRequestCount}
-              />
             </li>
 
             {/* mt-auto pushes this section to the bottom of sidebar */}

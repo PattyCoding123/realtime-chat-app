@@ -78,7 +78,10 @@ const Layout = async ({ children }: LayoutProps) => {
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
             {/* Render all available chats */}
             <li>
-              <SidebarChatList friends={friends} />
+              <SidebarChatList
+                sessionUserId={sessionUser.id}
+                friends={friends}
+              />
             </li>
 
             {/* Render all available options */}

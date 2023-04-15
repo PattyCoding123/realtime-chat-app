@@ -1,8 +1,13 @@
 import clsx, { ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { z } from "zod";
 
 // This is a helper function to merge Tailwind classes with clsx
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
+}
+
+export function chatHrefConstructor(id1: string, id2: string): string {
+  const sortedIds = [id1, id2].sort();
+
+  return `${sortedIds[0]}--${sortedIds[1]}`;
 }

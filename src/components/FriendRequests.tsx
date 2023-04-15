@@ -23,14 +23,16 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   // Client-side, subscribe to the friend request event which will
   // allow us to see new incoming friend requests in real time.
   useEffect(() => {
-    // Begin listening to the friend request event
+    // Begin listening to the friend request event (create channel)
     pusherClient.subscribe(
       toPusherKey(`user:${sessionUserId}:incoming_friend_requests`)
     );
 
     const friendRequestsHandler = (data: IncomingFriendRequest) => {};
 
-    // Bind an event handler to the friend request event
+    // Bind an event handler to the friend request event, which will
+    // be called when a new friend request is received.
+    // Check the /api/friends/add route handlers
     pusherClient.bind("incoming_friend_requests", friendRequestsHandler);
 
     // Clean up by unsubscribing and unbinding the event handler

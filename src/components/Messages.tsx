@@ -1,17 +1,25 @@
 "use client";
 import { FC, useRef, useState } from "react";
-import { currentUser } from "@clerk/nextjs/app-beta";
+import { User } from "@clerk/nextjs/dist/api";
 import format from "date-fns/format";
+import Image from "next/image";
 
 import type { Message } from "@/lib/helpers/validators/messageValidator";
 import { cn } from "@/lib/utils";
 
 interface MessagesProps {
   sessionUserId: string;
+  sessionImg: string;
+  receiver: User;
   initialMessages: Message[];
 }
 
-const Messages: FC<MessagesProps> = ({ initialMessages, sessionUserId }) => {
+const Messages: FC<MessagesProps> = ({
+  initialMessages,
+  sessionUserId,
+  sessionImg,
+  receiver,
+}) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
 
   const scrollDownRef = useRef<HTMLDivElement | null>(null);
@@ -65,6 +73,19 @@ const Messages: FC<MessagesProps> = ({ initialMessages, sessionUserId }) => {
                     {formatTimestamp(message.timestamp)}
                   </span>
                 </span>
+              </div>
+              <div
+                className={cn("relative h-6 w-6", {
+                  "order-2": isCurrentUser,
+                  "order-1": !isCurrentUser,
+                  invisible: hasNextMessageFromSameUser,
+                })}
+              >
+                <Image
+                  fill
+                  src={isCurrentUser ? sessionImg : receiver.profileImageUrl}
+                  alt="Sender image"
+                />
               </div>
             </div>
           </div>

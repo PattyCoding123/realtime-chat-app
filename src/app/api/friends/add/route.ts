@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     const session = auth();
     const idToAdd = userToAdd[ACCESS_USER].id;
 
-    if (!session.userId || !session.user) {
+    if (!session.userId) {
       return new Response("Unauthorized", { status: 401 });
     }
 
@@ -61,6 +61,7 @@ export async function POST(req: Request) {
     }
 
     // valid request, send friend request
+    const currentUser = await clerkClient.users.getUser(session.userId);
 
     // Send pusher event to the account that the current user
     // is trying to add.
@@ -70,8 +71,7 @@ export async function POST(req: Request) {
       // Information to send to the client
       {
         senderId: session.userId,
-        senderEmail:
-          session.user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+        senderEmail: currentUser.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
       }
     );
 

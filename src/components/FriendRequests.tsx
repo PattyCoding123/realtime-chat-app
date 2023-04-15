@@ -28,12 +28,21 @@ const FriendRequests: FC<FriendRequestsProps> = ({
       toPusherKey(`user:${sessionUserId}:incoming_friend_requests`)
     );
 
-    const friendRequestsHandler = (data: IncomingFriendRequest) => {};
+    // Define an event handler to be called when a new friend request.
+    // When this is triggered from the pusherServer, we will update the state
+    // of the friend requests.
+    const friendRequestHandler = ({
+      senderId,
+      senderEmail,
+    }: IncomingFriendRequest) => {
+      console.log("function got called");
+      setFriendRequests((prev) => [...prev, { senderId, senderEmail }]);
+    };
 
     // Bind an event handler to the friend request event, which will
     // be called when a new friend request is received.
     // Check the /api/friends/add route handlers
-    pusherClient.bind("incoming_friend_requests", friendRequestsHandler);
+    pusherClient.bind("incoming_friend_requests", friendRequestHandler);
 
     // Clean up by unsubscribing and unbinding the event handler
     return () => {
@@ -41,7 +50,7 @@ const FriendRequests: FC<FriendRequestsProps> = ({
         toPusherKey(`user:${sessionUserId}:incoming_friend_requests`)
       );
 
-      pusherClient.unbind("incoming_friend_requests", friendRequestsHandler);
+      pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
     };
   }, [sessionUserId]);
   // Callback to call the acceptFriend route handler

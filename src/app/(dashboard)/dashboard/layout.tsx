@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import { currentUser } from "@clerk/nextjs/app-beta";
-import type { User } from "@clerk/nextjs/api";
+import { User } from "@clerk/nextjs/dist/api";
 
 import FriendRequestSidebarOptions from "@/components/FriendRequestsSidebarOptions";
 import { Icon, Icons } from "@/components/Icons";

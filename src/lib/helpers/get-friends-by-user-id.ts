@@ -1,6 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "./fetchRedis";
-import type { User } from "@clerk/nextjs/api";
+import { User } from "@clerk/nextjs/dist/api";
 
 export const getFriendsByUserId = async (userId: string): Promise<User[]> => {
   // Retrieve the friends of the current user

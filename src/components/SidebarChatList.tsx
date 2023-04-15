@@ -1,6 +1,6 @@
 "use client";
 import { FC, useState, useEffect } from "react";
-import type { User } from "@clerk/nextjs/api";
+import { User } from "@clerk/nextjs/dist/api";
 import { useRouter, usePathname } from "next/navigation";
 import { chatHrefConstructor } from "@/lib/utils";
 

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { clerkClient, currentUser } from "@clerk/nextjs/app-beta";
-import type { User } from "@clerk/nextjs/api";
+import { User } from "@clerk/nextjs/dist/api";
 
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import FriendRequests from "@/components/FriendRequests";

@@ -5,12 +5,13 @@ import { z } from "zod";
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import { db } from "@/lib/db";
 import { emailValidator } from "@/lib/helpers/validators/emailValidator";
-// import { pusherServer } from "@/lib/pusher";
-// import { toPusherKey } from "@/lib/utils";
+import { pusherServer } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 
 export async function POST(req: Request) {
   try {
     const ACCESS_USER = 0;
+    const FIRST_EMAIL_INDEX = 0;
 
     const body = await req.json();
     const { email: emailToAdd } = emailValidator.parse(body);
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
     const session = auth();
     const idToAdd = userToAdd[ACCESS_USER].id;
 
-    if (!session.userId) {
+    if (!session.userId || !session.user) {
       return new Response("Unauthorized", { status: 401 });
     }
 
@@ -61,14 +62,18 @@ export async function POST(req: Request) {
 
     // valid request, send friend request
 
-    // await pusherServer.trigger(
-    //   toPusherKey(`user:${idToAdd}:incoming_friend_requests`),
-    //   "incoming_friend_requests",
-    //   {
-    //     senderId: session.user.id,
-    //     senderEmail: session.user.email,
-    //   }
-    // );
+    // Send pusher event to the account that the current user
+    // is trying to add.
+    await pusherServer.trigger(
+      toPusherKey(`user:${idToAdd}:incoming_friend_requests`), // Channel that the event will be sent to
+      "incoming_friend_requests", // Function name to trigger
+      // Information to send to the client
+      {
+        senderId: session.userId,
+        senderEmail:
+          session.user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+      }
+    );
 
     await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.userId);
 

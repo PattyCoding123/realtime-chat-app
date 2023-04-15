@@ -15,6 +15,8 @@ const SidebarChatList: FC<SidebarChatListProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
+
+  // Stores ALL unseen messages that we fetch from the database.
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
 
   useEffect(() => {

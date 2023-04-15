@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
 
-import { emailValidator } from "@/lib/utils";
 import Button from "./ui/Button";
+import { emailValidator } from "@/lib/helpers/validators/emailValidator";
 
 interface AddFriendButtonProps {}
 

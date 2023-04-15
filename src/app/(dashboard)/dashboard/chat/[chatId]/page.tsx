@@ -2,14 +2,15 @@ import { clerkClient, currentUser } from "@clerk/nextjs/app-beta";
 import { notFound } from "next/navigation";
 
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
-import { messageArrayValidator } from "@/lib/utils";
+import { messageArrayValidator, type Message } from "@/lib/utils";
+
 interface PageProps {
   params: {
     chatId: string;
   };
 }
 
-const getChatMessages = async (chatId: string) => {
+const getChatMessages = async (chatId: string): Promise<Message[]> => {
   try {
     // Fetch messages for this chat room
     const results: string[] = await fetchRedis(

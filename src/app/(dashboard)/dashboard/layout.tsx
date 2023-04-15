@@ -8,6 +8,7 @@ import FriendRequestSidebarOptions from "@/components/FriendRequestsSidebarOptio
 import { Icon, Icons } from "@/components/Icons";
 import { SignedIn, UserButton } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
+import { getFriendsByUserId } from "@/lib/helpers/get-friends-by-user-id";
 
 interface LayoutProps {
   children: ReactNode;
@@ -35,8 +36,11 @@ const sidebarOptions: SidebarOption[] = [
 const FIRST_EMAIL_INDEX = 0;
 
 const Layout = async ({ children }: LayoutProps) => {
+  // Enforce that the user is signed in
   const sessionUser: User | null = await currentUser();
   if (!sessionUser) notFound();
+
+  const friends = await getFriendsByUserId(sessionUser.id);
 
   const unseenRequestCount = (
     (await fetchRedis(

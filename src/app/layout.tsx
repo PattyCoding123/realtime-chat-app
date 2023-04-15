@@ -1,5 +1,6 @@
-import Providers from "@/components/server/Providers";
+import Providers from "@/components/Providers";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
 export const metadata = {
   title: "Create Next App",
@@ -18,9 +19,11 @@ export default function RootLayout({
       <head>
         <title>Next.js 13 with Clerk</title>
       </head>
-      <Providers>
-        <body>{children}</body>
-      </Providers>
+      <ClerkProvider>
+        <Providers>
+          <body>{children}</body>
+        </Providers>
+      </ClerkProvider>
     </html>
   );
 }

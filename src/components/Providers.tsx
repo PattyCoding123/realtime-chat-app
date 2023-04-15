@@ -1,4 +1,4 @@
-import { ClerkProvider } from "@clerk/nextjs/app-beta";
+"use client";
 import { FC, ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -9,10 +9,8 @@ interface ProvidersProps {
 const Providers: FC<ProvidersProps> = ({ children }) => {
   return (
     <>
-      <ClerkProvider>
-        <Toaster position="top-center" reverseOrder={false} />
-        {children}
-      </ClerkProvider>
+      <Toaster position="top-center" reverseOrder={false} />
+      {children}
     </>
   );
 };

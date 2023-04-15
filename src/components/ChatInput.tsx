@@ -5,6 +5,7 @@ import TextAreaAutosize from "react-textarea-autosize";
 
 import Button from "./ui/Button";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 interface ChatInputProps {
   receiverUser: User;
@@ -20,8 +21,13 @@ const ChatInput: FC<ChatInputProps> = ({ receiverUser, chatId }) => {
     setIsLoading(true);
     try {
       await axios.post("/api/messages/send", { text: input, chatId });
-    } catch (error) {}
-    setIsLoading(false);
+      setInput(""); // Clear the input
+      textareaRef.current?.focus(); // Focus the input again after sending
+    } catch (error) {
+      toast.error("Error sending message. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <div className="mb-2 border-t border-gray-200 px-4 pt-4 sm:mb-0">

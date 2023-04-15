@@ -21,18 +21,22 @@ const Page = async ({}: PageProps) => {
   )) as string[];
 
   // get emails of people who sent logged in user a friend request
-  const userEmails = await clerkClient.users
-    .getUserList({
-      userId: incomingSenderIds,
-    })
-    .then((res) =>
-      res.map((user) => {
-        return {
-          senderId: user.id,
-          senderEmail: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
-        };
-      })
-    );
+  const userEmails =
+    incomingSenderIds.length > 0
+      ? await clerkClient.users
+          .getUserList({
+            userId: incomingSenderIds,
+          })
+          .then((res) =>
+            res.map((user) => {
+              return {
+                senderId: user.id,
+                senderEmail:
+                  user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+              };
+            })
+          )
+      : [];
 
   return (
     <main className="p-8">

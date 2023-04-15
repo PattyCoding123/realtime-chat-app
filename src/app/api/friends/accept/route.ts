@@ -2,7 +2,6 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { auth } from "@clerk/nextjs/app-beta";
 import { z } from "zod";
 
-import userIdExists from "@/lib/helpers/userIdExists";
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import { db } from "@/lib/db";
 // import { pusherServer } from "@/lib/pusher";
@@ -19,9 +18,6 @@ export async function POST(req: Request) {
     if (!session.userId) {
       return new Response("Unauthorized", { status: 401 });
     }
-
-    // Check if users exists in redis
-    await Promise.all([userIdExists(idToAdd), userIdExists(session.userId)]);
 
     // check if user is already added
     const isAlreadyAdded = (await fetchRedis(

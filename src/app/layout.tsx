@@ -1,6 +1,4 @@
-import { ClerkProvider } from "@clerk/nextjs/app-beta";
-import { UserButton, SignedIn } from "@clerk/nextjs/app-beta";
-
+import Providers from "@/components/Providers";
 import "./globals.css";
 
 export const metadata = {
@@ -20,9 +18,9 @@ export default function RootLayout({
       <head>
         <title>Next.js 13 with Clerk</title>
       </head>
-      <ClerkProvider>
+      <Providers>
         <body>{children}</body>
-      </ClerkProvider>
+      </Providers>
     </html>
   );
 }

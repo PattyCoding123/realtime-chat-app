@@ -8,6 +8,7 @@ import {
   messageArrayValidator,
 } from "@/lib/helpers/validators/messageValidator";
 import Messages from "@/components/Messages";
+import ChatInput from "@/components/ChatInput";
 
 interface PageProps {
   params: {
@@ -90,6 +91,7 @@ const Page = async ({ params }: PageProps) => {
         sessionUserId={sessionUser.id}
         initialMessages={initialMessages}
       />
+      <ChatInput />
     </div>
   );
 };

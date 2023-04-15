@@ -20,9 +20,9 @@ export default function RootLayout({
         <title>Next.js 13 with Clerk</title>
       </head>
       <ClerkProvider>
-        <Providers>
-          <body>{children}</body>
-        </Providers>
+        <body>
+          <Providers>{children}</Providers>
+        </body>
       </ClerkProvider>
     </html>
   );

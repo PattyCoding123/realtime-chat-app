@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import { db } from "@/lib/db";
-import { emailValidator } from "@/lib/utils";
+import { emailValidator } from "@/lib/helpers/validators/emailValidator";
 // import { pusherServer } from "@/lib/pusher";
 // import { toPusherKey } from "@/lib/utils";
 

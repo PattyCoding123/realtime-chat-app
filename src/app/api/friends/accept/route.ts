@@ -4,9 +4,9 @@ import { z } from "zod";
 
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import { db } from "@/lib/db";
+import { idValidator } from "@/lib/helpers/validators/idValidator";
 // import { pusherServer } from "@/lib/pusher";
 // import { toPusherKey } from "@/lib/utils";
-import { idValidator } from "@/lib/utils";
 
 export async function POST(req: Request) {
   try {

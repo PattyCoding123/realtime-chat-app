@@ -2,7 +2,7 @@ import { clerkClient, currentUser } from "@clerk/nextjs/app-beta";
 import { notFound } from "next/navigation";
 
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
-import { messageArrayValidator } from "@/lib/utils";
+import { messageArrayValidator } from "@/lib/helpers/validators/messageValidator";
 
 interface PageProps {
   params: {

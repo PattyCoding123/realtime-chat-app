@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/app-beta";
 import { z } from "zod";
 
-import { idValidator } from "@/lib/utils";
 import { db } from "@/lib/db";
+import { idValidator } from "@/lib/helpers/validators/idValidator";
 
 export async function POST(req: Request) {
   try {

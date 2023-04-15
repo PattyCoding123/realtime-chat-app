@@ -40,6 +40,9 @@ const getChatMessages = async (chatId: string): Promise<Message[]> => {
 };
 
 const FIRST_EMAIL_INDEX = 0;
+
+// Renders the chats for the current user and the recipient friend
+// they selected in the sidebar.
 const Page = async ({ params }: PageProps) => {
   const { chatId } = params;
 
@@ -91,7 +94,7 @@ const Page = async ({ params }: PageProps) => {
         sessionUserId={sessionUser.id}
         initialMessages={initialMessages}
       />
-      <ChatInput />
+      <ChatInput chatId={chatId} receiverUser={receiverUser} />
     </div>
   );
 };

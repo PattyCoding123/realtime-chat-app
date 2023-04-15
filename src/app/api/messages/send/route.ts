@@ -52,9 +52,10 @@ export async function POST(req: Request) {
 
     const message = messageValidator.parse(messageData);
 
+    // Score being the timestampw makes sorting messages easier
     await db.zadd(`chat:${chatId}:messages`, {
       score: timestamp,
-      member: JSON.stringify({ message }),
+      member: JSON.stringify(message),
     });
 
     return new Response("OK", { status: 200 });

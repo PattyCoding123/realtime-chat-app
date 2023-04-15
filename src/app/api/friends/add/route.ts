@@ -37,18 +37,18 @@ export async function POST(req: Request) {
       });
     }
 
-    // check if user is already added
-    const isAlreadyAdded = (await fetchRedis(
+    // check if user already sent a friend request
+    const hasFriendRequest = (await fetchRedis(
       "sismember",
       `user:${userToAdd[ACCESS_USER].id}:incoming_friend_requests`,
       session.userId
     )) as 0 | 1;
 
-    if (isAlreadyAdded) {
+    if (hasFriendRequest) {
       return new Response("Already added this user", { status: 400 });
     }
 
-    // check if user is already added
+    // check if user is already added as a friend
     const isAlreadyFriends = (await fetchRedis(
       "sismember",
       `user:${session.userId}:friends`,
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
 
     await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.userId);
 
-    return new Response("OK");
+    return new Response("OK", { status: 200 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response("Invalid request payload", { status: 422 });

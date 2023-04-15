@@ -21,7 +21,7 @@ dependencies:
     version: 18.0.11
   '@upstash/redis':
     specifier: ^1.20.2
-    version: 1.20.2
+    version: 1.20.2(encoding@0.1.13)
   autoprefixer:
     specifier: 10.4.14
     version: 10.4.14(postcss@8.4.21)
@@ -40,6 +40,9 @@ dependencies:
   date-fns:
     specifier: ^2.29.3
     version: 2.29.3
+  encoding:
+    specifier: ^0.1.13
+    version: 0.1.13
   eslint:
     specifier: 8.38.0
     version: 8.38.0
@@ -63,7 +66,7 @@ dependencies:
     version: 0.2.7(prettier@2.8.7)
   pusher:
     specifier: ^5.1.2
-    version: 5.1.2
+    version: 5.1.2(encoding@0.1.13)
   pusher-js:
     specifier: ^8.0.2
     version: 8.0.2
@@ -679,10 +682,10 @@ packages:
       eslint-visitor-keys: 3.4.0
     dev: false
 
-  /@upstash/redis@1.20.2:
+  /@upstash/redis@1.20.2(encoding@0.1.13):
     resolution: {integrity: sha512-9QS/SypDxeeh672H7dEEmuYOX5TtPYnaDLlhxWJEPd8LzcEQ6hohwDJuojpqGkvvvrK58mlWOkN1GrMxbXPTeQ==}
     dependencies:
-      isomorphic-fetch: 3.0.0
+      isomorphic-fetch: 3.0.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -1390,6 +1393,12 @@ packages:
 
   /emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
+    dev: false
+
+  /encoding@0.1.13:
+    resolution: {integrity: sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==}
+    dependencies:
+      iconv-lite: 0.6.3
     dev: false
 
   /end-of-stream@1.4.4:
@@ -2215,6 +2224,13 @@ packages:
     engines: {node: '>=8.12.0'}
     dev: false
 
+  /iconv-lite@0.6.3:
+    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      safer-buffer: 2.1.2
+    dev: false
+
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
     dev: false
@@ -2480,10 +2496,10 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: false
 
-  /isomorphic-fetch@3.0.0:
+  /isomorphic-fetch@3.0.0(encoding@0.1.13):
     resolution: {integrity: sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==}
     dependencies:
-      node-fetch: 2.6.9
+      node-fetch: 2.6.9(encoding@0.1.13)
       whatwg-fetch: 3.6.2
     transitivePeerDependencies:
       - encoding
@@ -2824,7 +2840,7 @@ packages:
     resolution: {integrity: sha512-VzW+TAk2wE4X9maiKMlT+GsPU4OMmR1U9CrHSmd3DFLn2IcZ9VJ6M6BBugGfYUnPCLSYxXdZy17M0BEJyhUTwg==}
     dev: false
 
-  /node-fetch@2.6.9:
+  /node-fetch@2.6.9(encoding@0.1.13):
     resolution: {integrity: sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==}
     engines: {node: 4.x || >=6.0.0}
     peerDependencies:
@@ -2833,6 +2849,7 @@ packages:
       encoding:
         optional: true
     dependencies:
+      encoding: 0.1.13
       whatwg-url: 5.0.0
     dev: false
 
@@ -3235,14 +3252,14 @@ packages:
       tweetnacl: 1.0.3
     dev: false
 
-  /pusher@5.1.2:
+  /pusher@5.1.2(encoding@0.1.13):
     resolution: {integrity: sha512-uQTIVPUVrV78g/PnUT1gNBA63cKPCwEXlWlkdCuvL4Xo4QmWQyKsnkPIcIm7ArLkaTLDrtFPPK//NzHxm4N+cg==}
     engines: {node: '>= 4.0.0'}
     dependencies:
       '@types/node-fetch': 2.6.2
       abort-controller: 3.0.0
       is-base64: 1.1.0
-      node-fetch: 2.6.9
+      node-fetch: 2.6.9(encoding@0.1.13)
       tweetnacl: 1.0.3
       tweetnacl-util: 0.15.1
     transitivePeerDependencies:

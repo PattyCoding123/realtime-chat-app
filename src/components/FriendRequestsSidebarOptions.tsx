@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { User } from "lucide-react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { pusherClient } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 
 interface FriendRequestSidebarOptionsProps {
   sessionUserId: string; // This is the session ID of the user that is currently logged in.
@@ -16,6 +18,36 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
   const [unseenRequestCount, setUnseenRequestCount] = useState(
     initialUnseenRequestCount
   );
+
+  // Client-side, subscribe to the friend request event which will
+  // allow us to see new incoming friend requests in real time.
+  useEffect(() => {
+    // Begin listening to the friend request event (create channel)
+    pusherClient.subscribe(
+      toPusherKey(`user:${sessionUserId}:incoming_friend_requests`)
+    );
+
+    // Define an event handler to be called when a new friend request.
+    // When this is triggered from the pusherServer, we will update the state
+    // of the unseen requests.
+    const friendRequestHandler = () => {
+      setUnseenRequestCount((prev) => prev + 1);
+    };
+
+    // Bind an event handler to the friend request event, which will
+    // be called when a new friend request is received.
+    // Check the /api/friends/add route handlers
+    pusherClient.bind("incoming_friend_requests", friendRequestHandler);
+
+    // Clean up by unsubscribing and unbinding the event handler
+    return () => {
+      pusherClient.unsubscribe(
+        toPusherKey(`user:${sessionUserId}:incoming_friend_requests`)
+      );
+
+      pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
+    };
+  }, [sessionUserId]);
 
   return (
     <Link

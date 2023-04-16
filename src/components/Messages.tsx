@@ -1,15 +1,17 @@
 "use client";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { User } from "@clerk/nextjs/dist/api";
 import format from "date-fns/format";
 import Image from "next/image";
 
 import type { Message } from "@/lib/helpers/validators/messageValidator";
-import { cn } from "@/lib/utils";
+import { cn, toPusherKey } from "@/lib/utils";
+import { pusherClient } from "@/lib/pusher";
 
 interface MessagesProps {
   sessionUserId: string;
   sessionImg: string;
+  chatId: string;
   receiver: User;
   initialMessages: Message[];
 }
@@ -17,6 +19,7 @@ interface MessagesProps {
 const Messages: FC<MessagesProps> = ({
   initialMessages,
   sessionUserId,
+  chatId,
   sessionImg,
   receiver,
 }) => {
@@ -24,9 +27,34 @@ const Messages: FC<MessagesProps> = ({
 
   const scrollDownRef = useRef<HTMLDivElement | null>(null);
 
+  // Client-side, subscribe to the chat room messaging event
+  useEffect(() => {
+    // Begin listening to the chat room messaging event (create channel)
+    pusherClient.subscribe(toPusherKey(`chat:${chatId}`));
+
+    // Define an event handler to be called when a message is sent
+    // to the chat room.
+    const messageHandler = (message: Message) => {
+      setMessages((prev) => [message, ...prev]);
+    };
+
+    // Bind an event handler to the messaging event, which will
+    // be called when a new message is send.
+    // Check the /api/messages/sned route handlers
+    pusherClient.bind("incoming-message", messageHandler);
+
+    // Clean up by unsubscribing and unbinding the event handler
+    return () => {
+      pusherClient.subscribe(toPusherKey(`chat:${chatId}`));
+
+      pusherClient.unbind("incoming-message", messageHandler);
+    };
+  }, [chatId]);
+
   const formatTimestamp = (timestamp: number) => {
     return format(timestamp, "HH:mm");
   };
+
   return (
     <div
       id="messages"

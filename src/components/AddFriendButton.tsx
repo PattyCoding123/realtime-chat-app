@@ -15,6 +15,7 @@ type FormData = z.infer<typeof emailValidator>;
 
 const AddFriendBUtton: FC<AddFriendButtonProps> = ({}) => {
   const [showSuccessState, setShowSuccessState] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -26,6 +27,7 @@ const AddFriendBUtton: FC<AddFriendButtonProps> = ({}) => {
   });
 
   const addFriend = async (email: string) => {
+    setIsLoading(true);
     try {
       const validatedEmail = emailValidator.parse({ email });
       await axios.post("/api/friends/add", validatedEmail);
@@ -43,6 +45,8 @@ const AddFriendBUtton: FC<AddFriendButtonProps> = ({}) => {
       }
 
       setError("email", { message: "Something went wrong" });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -66,7 +70,7 @@ const AddFriendBUtton: FC<AddFriendButtonProps> = ({}) => {
           className="right-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           placeholder="email@example.com"
         />
-        <Button>Add</Button>
+        <Button isLoading={isLoading}>Add</Button>
       </div>
       {errors.email && (
         <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>

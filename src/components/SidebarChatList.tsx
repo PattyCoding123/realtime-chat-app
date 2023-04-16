@@ -1,17 +1,17 @@
 "use client";
 import { FC, useState, useEffect } from "react";
-import { User } from "@clerk/nextjs/dist/api";
 import { useRouter, usePathname } from "next/navigation";
 
 import { chatHrefConstructor, toPusherKey } from "@/lib/utils";
 import { Message } from "@/lib/helpers/validators/messageValidator";
 import { pusherClient } from "@/lib/pusher";
 import { toast } from "react-hot-toast";
+import { ClientUser } from "@/lib/helpers/get-friends-by-user-id";
 import UnseenChatToast from "./UnseenChatToast";
 
 interface SidebarChatListProps {
   sessionUserId: string;
-  friends: User[];
+  friends: ClientUser[];
 }
 
 interface ExtendedMessage extends Message {

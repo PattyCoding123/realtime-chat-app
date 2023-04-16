@@ -1,18 +1,18 @@
 "use client";
 import { FC, useEffect, useRef, useState } from "react";
-import { User } from "@clerk/nextjs/dist/api";
 import format from "date-fns/format";
 import Image from "next/image";
 
 import type { Message } from "@/lib/helpers/validators/messageValidator";
 import { cn, toPusherKey } from "@/lib/utils";
 import { pusherClient } from "@/lib/pusher";
+import { ClientUser } from "@/lib/helpers/get-friends-by-user-id";
 
 interface MessagesProps {
   sessionUserId: string;
   sessionImg: string;
   chatId: string;
-  receiver: User;
+  receiver: ClientUser;
   initialMessages: Message[];
 }
 

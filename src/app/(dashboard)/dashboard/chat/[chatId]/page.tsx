@@ -56,7 +56,17 @@ const Page = async ({ params }: PageProps) => {
 
   // Determine the sender and receiver of the chat
   const receiverId = sessionUser.id === userId1 ? userId2 : userId1;
-  const receiverUser = await clerkClient.users.getUser(receiverId);
+  const receiverUser = await clerkClient.users
+    .getUser(receiverId)
+    .then((user) => {
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
+        emailAddress: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+      };
+    });
   const initialMessages = await getChatMessages(chatId);
 
   // Dynamically calculate the height
@@ -84,7 +94,7 @@ const Page = async ({ params }: PageProps) => {
             </div>
 
             <span className="text-sm text-gray-600">
-              {receiverUser.emailAddresses[FIRST_EMAIL_INDEX].emailAddress}
+              {receiverUser.emailAddress}
             </span>
           </div>
         </div>
@@ -97,7 +107,7 @@ const Page = async ({ params }: PageProps) => {
         sessionUserId={sessionUser.id}
         initialMessages={initialMessages}
       />
-      <ChatInput chatId={chatId} receiverUser={receiverUser} />
+      <ChatInput receiverUser={receiverUser} chatId={chatId} />
     </div>
   );
 };

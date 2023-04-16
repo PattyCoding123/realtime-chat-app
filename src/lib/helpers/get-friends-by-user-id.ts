@@ -3,7 +3,7 @@ import { fetchRedis } from "./fetchRedis";
 
 export interface ClientUser {
   id: string;
-  email: string;
+  emailAddress: string;
   firstName: string | null;
   lastName: string | null;
   profileImageUrl: string;
@@ -27,7 +27,7 @@ export const getFriendsByUserId = async (
           (user) => {
             return {
               id: user.id,
-              email: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+              emailAddress: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
               firstName: user.firstName,
               lastName: user.lastName,
               profileImageUrl: user.profileImageUrl,

@@ -1,14 +1,14 @@
 "use client";
-import { User } from "@clerk/nextjs/dist/api";
 import { FC, useRef, useState } from "react";
 import TextAreaAutosize from "react-textarea-autosize";
 
 import Button from "./ui/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { ClientUser } from "@/lib/helpers/get-friends-by-user-id";
 
 interface ChatInputProps {
-  receiverUser: User;
+  receiverUser: ClientUser;
   chatId: string;
 }
 

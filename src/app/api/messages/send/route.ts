@@ -7,6 +7,8 @@ import {
   messageValidator,
   type Message,
 } from "@/lib/helpers/validators/messageValidator";
+import { pusherServer } from "@/lib/pusher";
+import { toPusherKey } from "@/lib/utils";
 
 export async function POST(req: Request) {
   try {
@@ -51,6 +53,13 @@ export async function POST(req: Request) {
     };
 
     const message = messageValidator.parse(messageData);
+
+    // Notify all connected chatroom clients that a new message has been sent.
+    await pusherServer.trigger(
+      toPusherKey(`chat:${chatId}`),
+      "incoming-message",
+      message
+    );
 
     // Score being the timestampw makes sorting messages easier
     await db.zadd(`chat:${chatId}:messages`, {

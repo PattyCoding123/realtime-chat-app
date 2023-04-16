@@ -51,7 +51,7 @@ const AddFriendBUtton: FC<AddFriendButtonProps> = ({}) => {
   };
 
   return (
-    <form className="maw-w-sm" onSubmit={handleSubmit(onSubmit)}>
+    <form className="max-w-sm" onSubmit={handleSubmit(onSubmit)}>
       <label
         htmlFor="email"
         className="block text-sm font-medium leading-6 text-gray-900"

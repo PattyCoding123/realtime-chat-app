@@ -10,6 +10,8 @@ export interface ClientUser {
   profileImageUrl: string;
 }
 
+const FIRST_EMAIL_INDEX = 0;
+
 export const getFriendsByUserId = async (
   userId: string
 ): Promise<ClientUser[]> => {
@@ -26,7 +28,7 @@ export const getFriendsByUserId = async (
           (user) => {
             return {
               id: user.id,
-              email: user.emailAddresses[0].emailAddress,
+              email: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
               firstName: user.firstName,
               lastName: user.lastName,
               profileImageUrl: user.profileImageUrl,

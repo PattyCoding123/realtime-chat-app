@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { User } from "lucide-react";
 import { FC, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+
 import { pusherClient } from "@/lib/pusher";
 import { toPusherKey } from "@/lib/utils";
 
@@ -15,6 +17,7 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
   sessionUserId,
   initialUnseenRequestCount,
 }) => {
+  const pathname = usePathname();
   const [unseenRequestCount, setUnseenRequestCount] = useState(
     initialUnseenRequestCount
   );
@@ -48,6 +51,11 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
       pusherClient.unbind("incoming_friend_requests", friendRequestHandler);
     };
   }, [sessionUserId]);
+
+  useEffect(() => {
+    if (!pathname.includes("/dashboard/add")) return;
+    setUnseenRequestCount(0);
+  }, [pathname]);
 
   return (
     <Link

@@ -9,11 +9,9 @@ import axios, { AxiosError } from "axios";
 import Button from "./ui/Button";
 import { emailValidator } from "@/lib/helpers/validators/emailValidator";
 
-interface AddFriendButtonProps {}
-
 type FormData = z.infer<typeof emailValidator>;
 
-const AddFriendBUtton: FC<AddFriendButtonProps> = ({}) => {
+const AddFriendBUtton: FC = () => {
   const [showSuccessState, setShowSuccessState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 

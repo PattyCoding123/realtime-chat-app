@@ -5,11 +5,9 @@ import { User } from "@clerk/nextjs/dist/api";
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import FriendRequests from "@/components/FriendRequests";
 
-interface PageProps {}
-
 const FIRST_EMAIL_INDEX = 0;
 
-const Page = async ({}: PageProps) => {
+const Page = async () => {
   const sessionUser: User | null = await currentUser();
 
   if (!sessionUser) notFound();

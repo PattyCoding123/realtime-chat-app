@@ -1,6 +1,5 @@
 import { clerkClient } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "./fetchRedis";
-import { User } from "@clerk/nextjs/dist/api";
 
 export interface ClientUser {
   id: string;

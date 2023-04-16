@@ -10,6 +10,7 @@ import { SignedIn, UserButton } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import { getFriendsByUserId } from "@/lib/helpers/get-friends-by-user-id";
 import SidebarChatList from "@/components/SidebarChatList";
+import MobileChatLayout from "@/components/MobileChatLayout";
 
 interface LayoutProps {
   children: ReactNode;
@@ -17,7 +18,7 @@ interface LayoutProps {
 
 // The Icon type will be the union of
 // of the keys of the Icons
-interface SidebarOption {
+export interface SidebarOption {
   id: number;
   name: string;
   href: string;
@@ -56,9 +57,12 @@ const Layout = async ({ children }: LayoutProps) => {
     // Separated into two sections: sidebar and main content
     <div className="flex h-screen w-full">
       {/* Sidebar */}
+      <div className="md:hidden">
+        <MobileChatLayout />
+      </div>
       <div
-        className="flex h-full w-full max-w-xs flex-col gap-y-5 overflow-y-auto 
-      border-r border-gray-200 bg-white px-6"
+        className="hidden h-full w-full max-w-xs flex-col gap-y-5 overflow-y-auto border-r 
+      border-gray-200 bg-white px-6 md:flex"
       >
         {/* Logo */}
         <div className="flex items-center justify-between">

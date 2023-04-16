@@ -71,7 +71,7 @@ const SidebarChatList: FC<SidebarChatListProps> = ({
       pusherClient.unsubscribe(toPusherKey(`user:${sessionUserId}:chats`));
       pusherClient.unsubscribe(toPusherKey(`user:${sessionUserId}:friends`));
     };
-  });
+  }, [pathname, sessionUserId, router]);
 
   useEffect(() => {
     // If the user is on the chat page, remove the messages from the unseenMessages array

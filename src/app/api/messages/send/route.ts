@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/app-beta";
+import { auth, clerkClient } from "@clerk/nextjs/app-beta";
 import { nanoid } from "nanoid";
 
 import { db } from "@/lib/db";
@@ -54,11 +54,24 @@ export async function POST(req: Request) {
 
     const message = messageValidator.parse(messageData);
 
-    // Notify all connected chatroom clients that a new message has been sent.
+    // Notify all connected chatroom clients that a new message has been sent and get the sender's name and image.
+    const [pusherRes, clerkRes] = await Promise.all([
+      pusherServer.trigger(
+        toPusherKey(`chat:${chatId}`),
+        "incoming-message",
+        message
+      ),
+      clerkClient.users.getUser(session.userId),
+    ]);
+
     await pusherServer.trigger(
-      toPusherKey(`chat:${chatId}`),
-      "incoming-message",
-      message
+      toPusherKey(`user:${friendId}:chats`),
+      "new_message",
+      {
+        ...message, // Spread the message object
+        senderImg: clerkRes.profileImageUrl,
+        senderName: `${clerkRes.firstName} ${clerkRes.lastName}`,
+      }
     );
 
     // Score being the timestampw makes sorting messages easier

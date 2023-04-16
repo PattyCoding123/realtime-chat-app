@@ -2,22 +2,76 @@
 import { FC, useState, useEffect } from "react";
 import { User } from "@clerk/nextjs/dist/api";
 import { useRouter, usePathname } from "next/navigation";
-import { chatHrefConstructor } from "@/lib/utils";
+
+import { chatHrefConstructor, toPusherKey } from "@/lib/utils";
+import { Message } from "@/lib/helpers/validators/messageValidator";
+import { pusherClient } from "@/lib/pusher";
+import { toast } from "react-hot-toast";
+import UnseenChatToast from "./UnseenChatToast";
 
 interface SidebarChatListProps {
   sessionUserId: string;
   friends: User[];
 }
 
+interface ExtendedMessage extends Message {
+  senderImg: string;
+  senderName: string;
+}
+
+// For each chat, we can see the event
 const SidebarChatList: FC<SidebarChatListProps> = ({
   sessionUserId,
   friends,
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-
   // Stores ALL unseen messages that we fetch from the database.
   const [unseenMessages, setUnseenMessages] = useState<Message[]>([]);
+
+  // Subscibe to messages events to get toast notification
+  useEffect(() => {
+    pusherClient.subscribe(toPusherKey(`user:${sessionUserId}:chats`));
+
+    pusherClient.subscribe(toPusherKey(`user"${sessionUserId}:friends`));
+
+    const newFriendHandler = () => {
+      router.refresh();
+    };
+
+    const newMessageHandler = (message: ExtendedMessage) => {
+      const shouldNotify =
+        pathname !==
+        `/dashboard/chat/${chatHrefConstructor(
+          sessionUserId,
+          message.senderId
+        )}`;
+
+      if (!shouldNotify) return;
+
+      // should be notified
+      toast.custom((t) => (
+        // Custom component
+        <UnseenChatToast
+          t={t}
+          sessionUserId={sessionUserId}
+          senderId={message.senderId}
+          senderImg={message.senderImg}
+          senderName={message.senderName}
+          senderMessage={message.text}
+        />
+      ));
+
+      setUnseenMessages((prev) => [...prev, message]);
+    };
+
+    pusherClient.bind("new_message", newMessageHandler);
+    pusherClient.bind("new_friend", newFriendHandler);
+    return () => {
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionUserId}:chats`));
+      pusherClient.unsubscribe(toPusherKey(`user:${sessionUserId}:friends`));
+    };
+  });
 
   useEffect(() => {
     // If the user is on the chat page, remove the messages from the unseenMessages array
@@ -35,7 +89,6 @@ const SidebarChatList: FC<SidebarChatListProps> = ({
         const unseenMessagesCount = unseenMessages.filter((unseenMsg) => {
           return unseenMsg.senderId === friend.id;
         }).length;
-
         return (
           <li key={friend.id}>
             <a

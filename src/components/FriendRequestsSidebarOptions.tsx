@@ -53,7 +53,7 @@ const FriendRequestSidebarOptions: FC<FriendRequestSidebarOptionsProps> = ({
   }, [sessionUserId]);
 
   useEffect(() => {
-    if (!pathname.includes("/dashboard/add")) return;
+    if (!pathname?.includes("/dashboard/requests")) return;
     setUnseenRequestCount(0);
   }, [pathname]);
 

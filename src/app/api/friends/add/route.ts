@@ -65,17 +65,19 @@ export async function POST(req: Request) {
 
     // Send pusher event to the account that the current user
     // is trying to add.
-    await pusherServer.trigger(
-      toPusherKey(`user:${idToAdd}:incoming_friend_requests`), // Channel that the event will be sent to
-      "incoming_friend_requests", // Function name to trigger
-      // Information to send to the client
-      {
-        senderId: session.userId,
-        senderEmail: currentUser.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
-      }
-    );
-
-    await db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.userId);
+    await Promise.all([
+      pusherServer.trigger(
+        toPusherKey(`user:${idToAdd}:incoming_friend_requests`), // Channel that the event will be sent to
+        "incoming_friend_requests", // Function name to trigger
+        // Information to send to the client
+        {
+          senderId: session.userId,
+          senderEmail:
+            currentUser.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+        }
+      ),
+      db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.userId),
+    ]);
 
     return new Response("OK", { status: 200 });
   } catch (error) {

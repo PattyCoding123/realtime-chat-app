@@ -64,21 +64,23 @@ export async function POST(req: Request) {
       clerkClient.users.getUser(session.userId),
     ]);
 
-    await pusherServer.trigger(
-      toPusherKey(`user:${friendId}:chats`),
-      "new_message",
-      {
-        ...message, // Spread the message object
-        senderImg: clerkRes.profileImageUrl,
-        senderName: `${clerkRes.firstName} ${clerkRes.lastName}`,
-      }
-    );
-
-    // Score being the timestampw makes sorting messages easier
-    await db.zadd(`chat:${chatId}:messages`, {
-      score: timestamp,
-      member: JSON.stringify(message),
-    });
+    // Notify the friend that a new message has been sent.
+    await Promise.all([
+      pusherServer.trigger(
+        toPusherKey(`user:${friendId}:chats`),
+        "new_message",
+        {
+          ...message, // Spread the message object
+          senderImg: clerkRes.profileImageUrl,
+          senderName: `${clerkRes.firstName} ${clerkRes.lastName}`,
+        }
+      ),
+      // Score being the timestampe makes sorting messages easier
+      db.zadd(`chat:${chatId}:messages`, {
+        score: timestamp,
+        member: JSON.stringify(message),
+      }),
+    ]);
 
     return new Response("OK", { status: 200 });
   } catch (error) {

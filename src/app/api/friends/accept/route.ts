@@ -42,15 +42,14 @@ export async function POST(req: Request) {
       return new Response("No friend request", { status: 400 });
     }
 
-    // Notify added user that is subscribed to the new_friend event
-    await pusherServer.trigger(
-      toPusherKey(`user:${idToAdd}:friends`),
-      "new_friend",
-      {}
-    );
-
-    // Both users add each other to their friends list, and clear up the incoming friend request
+    // Notify added user that is subscribed to the new_friend event on the user's friends channel.
+    // Both users add each other to their friends list, and clear up the incoming friend request.
     await Promise.all([
+      pusherServer.trigger(
+        toPusherKey(`user:${idToAdd}:friends`),
+        "new_friend",
+        {}
+      ),
       db.sadd(`user:${idToAdd}:friends`, session.userId),
       db.sadd(`user:${session.userId}:friends`, idToAdd),
       db.srem(`user:${session.userId}:incoming_friend_requests`, idToAdd),

@@ -4,13 +4,12 @@ import { Transition, Dialog } from "@headlessui/react";
 import { Menu, X } from "lucide-react";
 import { FC, Fragment, useEffect, useState } from "react";
 import { Icons } from "./Icons";
-import Image from "next/image";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
 import { ClientUser } from "@/lib/helpers/get-friends-by-user-id";
-import { SidebarOption } from "@/app/(dashboard)/dashboard/layout";
-import SignOutButton from "./SignOutButton";
+import { SidebarOption } from "@/types/typings";
 import Button, { ButtonVariants } from "./ui/Button";
 import FriendRequestSidebarOptions from "./FriendRequestsSidebarOptions";
 import SidebarChatList from "./SidebarChatList";
@@ -101,7 +100,7 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
                             <li>
                               <SidebarChatList
                                 friends={friends}
-                                sessionId={sessionUser.id}
+                                sessionUserId={sessionUser.id}
                               />
                             </li>
 
@@ -142,16 +141,12 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
 
                             <li className="-ml-6 mt-auto flex items-center">
                               <div className="flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900">
-                                <div className="relative h-8 w-8 bg-gray-50">
-                                  <Image
-                                    fill
-                                    referrerPolicy="no-referrer"
-                                    className="rounded-full"
-                                    src={sessionUser.profileImageUrl || ""}
-                                    alt="Your profile picture"
+                                <SignedIn>
+                                  <UserButton
+                                    afterSignOutUrl="/sign-in"
+                                    signInUrl="/sign-in"
                                   />
-                                </div>
-
+                                </SignedIn>
                                 <span className="sr-only">Your profile</span>
                                 <div className="flex flex-col">
                                   <span aria-hidden="true">
@@ -165,8 +160,6 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
                                   </span>
                                 </div>
                               </div>
-
-                              <SignOutButton className="aspect-square h-full" />
                             </li>
                           </ul>
                         </nav>

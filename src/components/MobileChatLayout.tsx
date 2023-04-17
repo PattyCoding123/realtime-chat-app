@@ -150,7 +150,7 @@ const MobileChatLayout: FC<MobileChatLayoutProps> = ({
                                 <span className="sr-only">Your profile</span>
                                 <div className="flex flex-col">
                                   <span aria-hidden="true">
-                                    {`${sessionUser.firstName} ${sessionUser.lastName}`}
+                                    {`${sessionUser.username}`}
                                   </span>
                                   <span
                                     className="text-xs text-zinc-400"

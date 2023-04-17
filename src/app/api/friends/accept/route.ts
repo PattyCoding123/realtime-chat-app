@@ -50,6 +50,11 @@ export async function POST(req: Request) {
         "new_friend",
         {}
       ),
+      pusherServer.trigger(
+        toPusherKey(`user:${session.userId}:friends`),
+        "new_friend",
+        {}
+      ),
       db.sadd(`user:${idToAdd}:friends`, session.userId),
       db.sadd(`user:${session.userId}:friends`, idToAdd),
       db.srem(`user:${session.userId}:incoming_friend_requests`, idToAdd),

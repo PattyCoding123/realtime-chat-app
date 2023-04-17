@@ -55,10 +55,10 @@ const Page = async ({ params }: PageProps) => {
 
   // Determine the sender and receiver of the chat
   const receiverId = sessionUser.id === userId1 ? userId2 : userId1;
-  const receiverUser = await clerkClient.users
-    .getUser(receiverId)
-    .then((user) => userForClient(user));
-  const initialMessages = await getChatMessages(chatId);
+  const [receiverUser, initialMessages] = await Promise.all([
+    clerkClient.users.getUser(receiverId).then((user) => userForClient(user)),
+    getChatMessages(chatId),
+  ]);
 
   // Dynamically calculate the height
   return (

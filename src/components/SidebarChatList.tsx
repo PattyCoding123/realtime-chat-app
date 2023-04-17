@@ -34,7 +34,7 @@ const SidebarChatList: FC<SidebarChatListProps> = ({
   useEffect(() => {
     pusherClient.subscribe(toPusherKey(`user:${sessionUserId}:chats`));
 
-    pusherClient.subscribe(toPusherKey(`user"${sessionUserId}:friends`));
+    pusherClient.subscribe(toPusherKey(`user:${sessionUserId}:friends`));
 
     const newFriendHandler = (newFriend: ClientUser) => {
       // Update realtime by using state

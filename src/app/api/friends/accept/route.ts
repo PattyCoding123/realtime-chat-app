@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { idValidator } from "@/lib/helpers/validators/idValidator";
 import { pusherServer } from "@/lib/pusher";
 import { toPusherKey } from "@/lib/utils";
+import { userForClient } from "@/lib/helpers/get-friends-by-user-id";
 // import { pusherServer } from "@/lib/pusher";
 // import { toPusherKey } from "@/lib/utils";
 
@@ -42,18 +43,26 @@ export async function POST(req: Request) {
       return new Response("No friend request", { status: 400 });
     }
 
+    // Get session user and friend as client users
+    const [user, newFriend] = await Promise.all([
+      clerkClient.users
+        .getUser(session.userId)
+        .then((user) => userForClient(user)),
+      clerkClient.users.getUser(idToAdd).then((user) => userForClient(user)),
+    ]);
+
     // Notify added user that is subscribed to the new_friend event on the user's friends channel.
     // Both users add each other to their friends list, and clear up the incoming friend request.
     await Promise.all([
       pusherServer.trigger(
         toPusherKey(`user:${idToAdd}:friends`),
         "new_friend",
-        {}
+        user
       ),
       pusherServer.trigger(
         toPusherKey(`user:${session.userId}:friends`),
         "new_friend",
-        {}
+        newFriend
       ),
       db.sadd(`user:${idToAdd}:friends`, session.userId),
       db.sadd(`user:${session.userId}:friends`, idToAdd),

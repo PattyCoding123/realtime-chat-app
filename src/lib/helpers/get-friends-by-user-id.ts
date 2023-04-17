@@ -1,5 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "./fetchRedis";
+import { User } from "@clerk/nextjs/dist/api";
 
 export interface ClientUser {
   id: string;
@@ -10,6 +11,14 @@ export interface ClientUser {
 }
 
 const FIRST_EMAIL_INDEX = 0;
+
+export const userForClient = (user: User): ClientUser => ({
+  id: user.id,
+  emailAddress: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  profileImageUrl: user.profileImageUrl,
+});
 
 export const getFriendsByUserId = async (
   userId: string
@@ -24,15 +33,7 @@ export const getFriendsByUserId = async (
   const friends =
     friendIds.length > 0
       ? (await clerkClient.users.getUserList({ userId: friendIds })).map(
-          (user) => {
-            return {
-              id: user.id,
-              emailAddress: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              profileImageUrl: user.profileImageUrl,
-            };
-          }
+          (user) => userForClient(user)
         )
       : [];
 

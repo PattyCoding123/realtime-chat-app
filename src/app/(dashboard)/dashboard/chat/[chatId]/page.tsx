@@ -7,6 +7,7 @@ import {
   type Message,
   messageArrayValidator,
 } from "@/lib/helpers/validators/messageValidator";
+import { userForClient } from "@/lib/helpers/get-friends-by-user-id";
 import Messages from "@/components/Messages";
 import ChatInput from "@/components/ChatInput";
 
@@ -39,8 +40,6 @@ const getChatMessages = async (chatId: string): Promise<Message[]> => {
   }
 };
 
-const FIRST_EMAIL_INDEX = 0;
-
 // Renders the chats for the current user and the recipient friend
 // they selected in the sidebar.
 const Page = async ({ params }: PageProps) => {
@@ -58,15 +57,7 @@ const Page = async ({ params }: PageProps) => {
   const receiverId = sessionUser.id === userId1 ? userId2 : userId1;
   const receiverUser = await clerkClient.users
     .getUser(receiverId)
-    .then((user) => {
-      return {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        profileImageUrl: user.profileImageUrl,
-        emailAddress: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
-      };
-    });
+    .then((user) => userForClient(user));
   const initialMessages = await getChatMessages(chatId);
 
   // Dynamically calculate the height

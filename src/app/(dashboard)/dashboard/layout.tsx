@@ -5,11 +5,11 @@ import { currentUser } from "@clerk/nextjs/app-beta";
 import { User } from "@clerk/nextjs/dist/api";
 
 import FriendRequestSidebarOptions from "@/components/FriendRequestsSidebarOptions";
-import { Icon, Icons } from "@/components/Icons";
+import { Icons } from "@/components/Icons";
 import { SignedIn, UserButton } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import {
-  ClientUser,
+  userForClient,
   getFriendsByUserId,
 } from "@/lib/helpers/get-friends-by-user-id";
 import { SidebarOption } from "@/types/typings";
@@ -41,13 +41,7 @@ const Layout = async ({ children }: LayoutProps) => {
   const friends = await getFriendsByUserId(sessionUser.id);
 
   // Get session user for client side
-  const clientSessionUser: ClientUser = {
-    id: sessionUser.id,
-    emailAddress: sessionUser.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
-    firstName: sessionUser.firstName,
-    lastName: sessionUser.lastName,
-    profileImageUrl: sessionUser.profileImageUrl,
-  };
+  const clientSessionUser = userForClient(sessionUser);
 
   // Get friend requests
   const unseenRequestCount = (

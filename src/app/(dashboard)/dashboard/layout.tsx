@@ -8,21 +8,16 @@ import FriendRequestSidebarOptions from "@/components/FriendRequestsSidebarOptio
 import { Icon, Icons } from "@/components/Icons";
 import { SignedIn, UserButton } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
-import { getFriendsByUserId } from "@/lib/helpers/get-friends-by-user-id";
+import {
+  ClientUser,
+  getFriendsByUserId,
+} from "@/lib/helpers/get-friends-by-user-id";
+import { SidebarOption } from "@/types/typings";
 import SidebarChatList from "@/components/SidebarChatList";
 import MobileChatLayout from "@/components/MobileChatLayout";
 
 interface LayoutProps {
   children: ReactNode;
-}
-
-// The Icon type will be the union of
-// of the keys of the Icons
-export interface SidebarOption {
-  id: number;
-  name: string;
-  href: string;
-  Icon: Icon;
 }
 
 // Add more sidebar options as needed
@@ -45,6 +40,15 @@ const Layout = async ({ children }: LayoutProps) => {
   // Get user's friends
   const friends = await getFriendsByUserId(sessionUser.id);
 
+  // Get session user for client side
+  const clientSessionUser: ClientUser = {
+    id: sessionUser.id,
+    emailAddress: sessionUser.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+    firstName: sessionUser.firstName,
+    lastName: sessionUser.lastName,
+    profileImageUrl: sessionUser.profileImageUrl,
+  };
+
   // Get friend requests
   const unseenRequestCount = (
     (await fetchRedis(
@@ -58,7 +62,12 @@ const Layout = async ({ children }: LayoutProps) => {
     <div className="flex h-screen w-full">
       {/* Sidebar */}
       <div className="md:hidden">
-        <MobileChatLayout />
+        <MobileChatLayout
+          sessionUser={clientSessionUser}
+          friends={friends}
+          sidebarOptions={sidebarOptions}
+          unseenRequestCount={unseenRequestCount}
+        />
       </div>
       <div
         className="hidden h-full w-full max-w-xs flex-col gap-y-5 overflow-y-auto border-r 

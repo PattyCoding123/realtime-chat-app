@@ -5,7 +5,8 @@ import { User } from "@clerk/nextjs/dist/api";
 export interface ClientUser {
   id: string;
   emailAddress: string;
-  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
   profileImageUrl: string;
 }
 
@@ -14,7 +15,8 @@ const FIRST_EMAIL_INDEX = 0;
 export const userForClient = (user: User): ClientUser => ({
   id: user.id,
   emailAddress: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
-  username: user.username,
+  firstName: user.firstName,
+  lastName: user.lastName,
   profileImageUrl: user.profileImageUrl,
 });
 

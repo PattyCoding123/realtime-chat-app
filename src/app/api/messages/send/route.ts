@@ -72,7 +72,7 @@ export async function POST(req: Request) {
         {
           ...message, // Spread the message object
           senderImg: clerkRes.profileImageUrl,
-          senderName: clerkRes.username,
+          senderName: `${clerkRes.firstName} ${clerkRes.lastName}`,
         }
       ),
       // Score being the timestampe makes sorting messages easier

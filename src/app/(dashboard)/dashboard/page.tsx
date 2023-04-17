@@ -66,7 +66,7 @@ const Page = async () => {
                   <Image
                     referrerPolicy="no-referrer"
                     className="rounded-full"
-                    alt={`${friend.username} profile picture`}
+                    alt={`${friend.firstName} ${friend.lastName} profile picture`}
                     src={friend.profileImageUrl}
                     fill
                   />
@@ -74,7 +74,7 @@ const Page = async () => {
               </div>
 
               <div>
-                <h4 className="text-lg font-semibold">{friend.username}</h4>
+                <h4 className="text-lg font-semibold">{`${friend.firstName} ${friend.lastName}`}</h4>
                 <p className="mt-1 max-w-md">
                   <span className="text-zinc-400">
                     {friend.lastMessage.senderId === sessionUser.id

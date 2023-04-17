@@ -137,7 +137,7 @@ const Layout = async ({ children }: LayoutProps) => {
                 {/* For screen readers, sr */}
                 <span className="sr-only">Your profile</span>
                 <div className="flex flex-col">
-                  <span aria-hidden="true">{sessionUser?.username}</span>
+                  <span aria-hidden="true">{`${sessionUser?.firstName} ${sessionUser?.lastName}`}</span>
                   <span className="text-sm text-zinc-400">
                     {
                       sessionUser?.emailAddresses[FIRST_EMAIL_INDEX]

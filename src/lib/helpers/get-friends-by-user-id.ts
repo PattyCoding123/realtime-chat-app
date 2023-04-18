@@ -2,6 +2,7 @@ import { clerkClient } from "@clerk/nextjs/app-beta";
 import { fetchRedis } from "./fetchRedis";
 import { User } from "@clerk/nextjs/dist/api";
 
+const FIRST_EMAIL_INDEX = 0;
 export interface ClientUser {
   id: string;
   emailAddress: string;
@@ -10,11 +11,11 @@ export interface ClientUser {
   profileImageUrl: string;
 }
 
-const FIRST_EMAIL_INDEX = 0;
-
 export const userForClient = (user: User): ClientUser => ({
   id: user.id,
-  emailAddress: user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+  emailAddress:
+    user.emailAddresses.find((email) => email.id === user.primaryEmailAddressId)
+      ?.emailAddress || user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
   firstName: user.firstName,
   lastName: user.lastName,
   profileImageUrl: user.profileImageUrl,

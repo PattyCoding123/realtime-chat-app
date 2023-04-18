@@ -7,11 +7,11 @@ import { db } from "@/lib/db";
 import { emailValidator } from "@/lib/helpers/validators/emailValidator";
 import { pusherServer } from "@/lib/pusher";
 import { toPusherKey } from "@/lib/utils";
+import { userForClient } from "@/lib/helpers/get-friends-by-user-id";
 
 export async function POST(req: Request) {
   try {
     const ACCESS_USER = 0;
-    const FIRST_EMAIL_INDEX = 0;
 
     const body = await req.json();
     const { email: emailToAdd } = emailValidator.parse(body);
@@ -61,7 +61,9 @@ export async function POST(req: Request) {
     }
 
     // valid request, send friend request
-    const currentUser = await clerkClient.users.getUser(session.userId);
+    const currentUser = await clerkClient.users
+      .getUser(session.userId)
+      .then((user) => userForClient(user));
 
     // Send pusher event to the account that the current user
     // is trying to add.
@@ -72,8 +74,7 @@ export async function POST(req: Request) {
         // Information to send to the client
         {
           senderId: session.userId,
-          senderEmail:
-            currentUser.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+          senderEmail: currentUser.emailAddress,
         }
       ),
       db.sadd(`user:${idToAdd}:incoming_friend_requests`, session.userId),

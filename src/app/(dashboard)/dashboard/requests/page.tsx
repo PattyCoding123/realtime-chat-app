@@ -4,8 +4,7 @@ import { User } from "@clerk/nextjs/dist/api";
 
 import { fetchRedis } from "@/lib/helpers/fetchRedis";
 import FriendRequests from "@/components/FriendRequests";
-
-const FIRST_EMAIL_INDEX = 0;
+import { userForClient } from "@/lib/helpers/get-friends-by-user-id";
 
 const Page = async () => {
   const sessionUser: User | null = await currentUser();
@@ -27,10 +26,10 @@ const Page = async () => {
           })
           .then((res) =>
             res.map((user) => {
+              const clientUser = userForClient(user);
               return {
                 senderId: user.id,
-                senderEmail:
-                  user.emailAddresses[FIRST_EMAIL_INDEX].emailAddress,
+                senderEmail: clientUser.emailAddress,
               };
             })
           )
